@@ -31,7 +31,7 @@ public class MainApplication extends GraphicsProgram{
 	}
 	
 	public void run() {
-		System.out.println("Lets' no!");
+		System.out.println("Lets' Go");
 		setupInteractions();
 		
 		//Initialize all Panes
