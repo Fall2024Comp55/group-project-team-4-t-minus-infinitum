@@ -19,6 +19,9 @@ public class GraphicsPane {
 	}
 
 	public void mousePressed(MouseEvent e) {
+		//Name the object
+		//if(SwingUtilities.isteftMouseButton(e) )
+		//else if (SwingUtilities.isRightMouseButton (e) )
 	}
 
 	public void mouseReleased(MouseEvent e) {
