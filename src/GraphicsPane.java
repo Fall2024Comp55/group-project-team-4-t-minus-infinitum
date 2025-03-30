@@ -37,6 +37,11 @@ public class GraphicsPane {
 		//Plan A free movement and the spaceship is connected with the mouse.
 		//plan C have it snap 
 		System.out.println("mouse moved");
+		/*float mouseX;
+		mouseX
+		= Camera.main.ScreenToWorldPoint(Input.mousePosition).x;
+		transform. position = new Vector3(mouseX, transform.position.y, transform.position.z);
+		*/
 	}
 
 	public void keyPressed(KeyEvent e) {
