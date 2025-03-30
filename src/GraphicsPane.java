@@ -36,6 +36,7 @@ public class GraphicsPane {
 	public void mouseMoved(MouseEvent e) {
 		//Plan A free movement and the spaceship is connected with the mouse.
 		//plan C have it snap 
+		System.out.println("mouse moved");
 	}
 
 	public void keyPressed(KeyEvent e) {
