@@ -10,4 +10,37 @@ public class UserSpaceship {
 		this.startColumn = startCol;
 		this.sType = Spaceship;
 	}
+	
+	//Getter and setter for Start Row
+	public int getStartRow()
+	{
+		return startRow;
+	}
+	
+	public void setStartRow(int startRow)
+	{
+		this.startRow = startRow;
+	}
+	
+	//Getter and setter for Start Column
+	public int getStartColumn()
+	{
+		return startColumn;
+	}
+	
+	public void setStartColumn(int startCol)
+	{
+		this.startColumn = startCol;
+	}
+	
+	//Getter and setter for SpaceshipType
+	public SpaceshipType getSpaceship()
+	{
+		return sType;
+	}
+	
+	public void setSpaceshipType (SpaceshipType Spaceship)
+	{
+		this.sType = Spaceship;
+	}
 }
