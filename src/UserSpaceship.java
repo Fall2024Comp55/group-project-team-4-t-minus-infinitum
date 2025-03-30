@@ -43,4 +43,6 @@ public class UserSpaceship {
 	{
 		this.sType = Spaceship;
 	}
+	
+	//Collision on enemies (TBA)
 }
