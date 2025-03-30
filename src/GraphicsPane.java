@@ -34,9 +34,12 @@ public class GraphicsPane {
 	}
 
 	public void mouseMoved(MouseEvent e) {
+		//Plan A free movement and the spaceship is connected with the mouse.
+		//plan C have it snap 
 	}
 
 	public void keyPressed(KeyEvent e) {
+		//plan b use the keys for the movement of the user spaceship
 	}
 
 	public void keyReleased(KeyEvent e) {
