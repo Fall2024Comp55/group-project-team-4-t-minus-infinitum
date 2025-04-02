@@ -43,8 +43,8 @@ public class UserSpaceship {
 	{
 		this.sType = Spaceship;
 	}
-	
-	// prints out more legibly the row & columns for an array of spaces
+
+	//prints out more legibly the row & columns for an array of spaces
 	public static void printSpaces(TSpace[] arr) {
 		 for(int i = 0; i < arr.length; i++) {
 		System.out.print("r" + arr[i].getRow() + "c" + arr[i].getColumn() + "; ");
