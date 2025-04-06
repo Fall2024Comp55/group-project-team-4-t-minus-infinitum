@@ -38,7 +38,7 @@ public class Enemyship2 {
 	}
 	
 	//Getter and setter for SpaceshipType
-	public SpaceshipType getEnemyship1()
+	public SpaceshipType getEnemyship2()
 	{
 		return sType;
 	}
