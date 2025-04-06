@@ -54,15 +54,13 @@ public class Enemyship1{
 
 	    GPolygon triangle = new GPolygon();
 
-	    // Add vertices relative to center
-	    triangle.addVertex(0, -SIZE / 2);        // Top point
-	    triangle.addVertex(SIZE / 2, SIZE / 2);  // Bottom right
-	    triangle.addVertex(-SIZE / 2, SIZE / 2); // Bottom left
+	    // Triangle pointing downward:
+	    triangle.addVertex(0, SIZE / 2);          // Bottom center
+	    triangle.addVertex(SIZE / 2, -SIZE / 2);   // Top right
+	    triangle.addVertex(-SIZE / 2, -SIZE / 2);  // Top left
 
 	    triangle.setFilled(true);
 	    triangle.setColor(Color.RED);
-
-	    // Move the triangle to (x, y)
 	    triangle.setLocation(x, y);
 
 	    return triangle;
