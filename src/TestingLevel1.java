@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.awt.event.*;
 
-public class Testing extends GraphicsProgram{
+public class TestingLevel1 extends GraphicsProgram{
 	private ArrayList<GOval> enemyBullets;
 	private Timer movement;
 	private RandomGenerator rgen;
@@ -100,6 +100,6 @@ public class Testing extends GraphicsProgram{
 	}
 
 	public static void main(String[] args) {
-		new Testing().start();
+		new TestingLevel1().start();
 	}
 }
