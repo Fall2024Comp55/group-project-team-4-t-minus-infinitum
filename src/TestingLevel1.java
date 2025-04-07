@@ -33,6 +33,14 @@ public class TestingLevel1 extends GraphicsProgram{
 		enemyBullets = new ArrayList<>();
 		enemyVisuals = new ArrayList<>();
 
+		//Declare and initialize the main Spaceship
+		
+		UserSpaceship mainship = new UserSpaceship(SpaceshipType.userSpaceship, 14, 12);
+		
+		GPolygon visualMain = mainship.getVisualMainShip();
+		
+		add(visualMain);
+		
 		// Declare and initialize the enemies array
 		Enemyship1[] enemies = {
 			new Enemyship1(SpaceshipType.eType1, 5, 7),
@@ -49,6 +57,7 @@ public class TestingLevel1 extends GraphicsProgram{
 			add(visual);
 			enemyVisuals.add(visual);
 		}
+	
 
 		// Start the animation
 		movement = new Timer(MS, this);
