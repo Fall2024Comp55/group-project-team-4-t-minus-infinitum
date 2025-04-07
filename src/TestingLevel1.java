@@ -23,7 +23,7 @@ public class TestingLevel1 extends GraphicsProgram{
 	private int ticksSinceLastShot = 0; // Counter for how many ticks have passed since the last shot
 
 	private ArrayList<GPolygon> enemyVisuals;
-
+    private GPolygon visualMainShip;
 	public void init() {
 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
 	}
@@ -36,10 +36,8 @@ public class TestingLevel1 extends GraphicsProgram{
 		//Declare and initialize the main Spaceship
 		
 		UserSpaceship mainship = new UserSpaceship(SpaceshipType.userSpaceship, 14, 12);
-		
-		GPolygon visualMain = mainship.getVisualMainShip();
-		
-		add(visualMain);
+		visualMainShip = mainship.getVisualMainShip();
+		add(visualMainShip);
 		
 		// Declare and initialize the enemies array
 		Enemyship1[] enemies = {
@@ -62,6 +60,21 @@ public class TestingLevel1 extends GraphicsProgram{
 		// Start the animation
 		movement = new Timer(MS, this);
 		movement.start();
+		
+		addMouseListeners();
+	}
+	@Override
+	
+	public void mousePressed(MouseEvent e)
+	{
+		
+	}
+	
+	public void mouseMoved(MouseEvent e)
+	{
+		double mouseX = e.getX();
+		double mouseY = e.getY(); // Keep current Y
+		visualMainShip.setLocation(mouseX, mouseY);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -90,6 +103,7 @@ public class TestingLevel1 extends GraphicsProgram{
         add(bullet);
         enemyBullets.add(bullet);
     }
+	
 
 	private void moveAllEnemyBullets() {
 		ArrayList<GOval> bulletsToRemove = new ArrayList<>();

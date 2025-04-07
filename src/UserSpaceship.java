@@ -1,8 +1,13 @@
+import java.awt.Color;
+
+import acm.graphics.GPolygon;
 
 public class UserSpaceship {
 	private int startRow;
 	private int startColumn;
 	private SpaceshipType sType;
+	
+	public static final int SIZE = 40;
 	
 	public UserSpaceship(SpaceshipType Spaceship, int startRow, int startCol)
 	{
@@ -51,6 +56,23 @@ public class UserSpaceship {
 		 }
 		 System.out.println();
 		}
+	
+	public GPolygon getVisualMainShip() {
+	    int x = startColumn * SIZE;
+	    int y = startRow * SIZE;
+
+	    GPolygon triangle = new GPolygon();
+
+	    // Triangle pointing downward:
+	    triangle.addVertex(0, -SIZE / 2);          // Bottom center
+	    triangle.addVertex(SIZE / 2, SIZE / 2);   // Top right
+	    triangle.addVertex(-SIZE / 2, SIZE / 2);  // Top left
+	    triangle.setColor(Color.BLACK);
+	    triangle.setFilled(true);
+	    triangle.setLocation(x, y);
+
+	    return triangle;
+	}
 	
 	//Collision on enemies (TBA)
 }
