@@ -57,7 +57,7 @@ public class EnemyShipBasic{
 	    // Triangle pointing downward:
 	    triangle.addVertex(0, SIZE / 2);          // Bottom center
 	    triangle.addVertex(SIZE / 1, -SIZE / 2);   // Top right
-	    triangle.addVertex(-SIZE / 1, -SIZE / 2);  // Top left
+	    triangle.addVertex(-SIZE / 1, -SIZE / 1);  // Top left
 
 	    triangle.setFilled(true);
 	    triangle.setLocation(x, y);
