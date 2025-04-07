@@ -9,7 +9,7 @@ public class Enemyship1 extends EnemyShipBasic{
 
 	public GPolygon getVisual() {
 	    GPolygon triangle = super.getVisual();
-	    triangle.setColor(Color.RED);
+	    triangle.setColor(Color.blue);
 	    return triangle;
 	}
 }
