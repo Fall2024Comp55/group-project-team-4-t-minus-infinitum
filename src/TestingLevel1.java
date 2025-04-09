@@ -63,18 +63,43 @@ public class TestingLevel1 extends GraphicsProgram{
 		
 		addMouseListeners();
 	}
-	@Override
 	
+	public void userSpaceshipMovement(MouseEvent e) {
+		double mouseX = e.getX();
+		double mouseY = e.getY(); // Keep current Y
+		visualMainShip.setLocation(mouseX, mouseY);
+	}
+	
+	public void collisionDetection() {
+		for (GOval bullet : enemyBullets) {
+			if(bullet.getBounds().intersects(visualMainShip.getBounds()))
+			{
+				System.out.println("Collision Detected!");
+				enemyBullets.remove(bullet);
+				remove(bullet);
+				break;
+			}
+		}
+	}
+	
+	@Override
 	public void mousePressed(MouseEvent e)
 	{
 		
 	}
 	
+	@Override
 	public void mouseMoved(MouseEvent e)
 	{
-		double mouseX = e.getX();
-		double mouseY = e.getY(); // Keep current Y
-		visualMainShip.setLocation(mouseX, mouseY);
+		userSpaceshipMovement(e);
+		collisionDetection();
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e)
+	{
+		userSpaceshipMovement(e);
+		collisionDetection();
 	}
 
 	public void actionPerformed(ActionEvent e) {
