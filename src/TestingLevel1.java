@@ -70,13 +70,26 @@ public class TestingLevel1 extends GraphicsProgram{
 		visualMainShip.setLocation(mouseX, mouseY);
 	}
 	
-	public void collisionDetection() {
+	public void projectileCollisionDetection() {
 		for (GOval bullet : enemyBullets) {
 			if(bullet.getBounds().intersects(visualMainShip.getBounds()))
 			{
 				System.out.println("Collision Detected!");
 				enemyBullets.remove(bullet);
 				remove(bullet);
+				break;
+			}
+		}
+	}
+	
+	public void enemyCollisionDection()
+	{
+		for (GPolygon enemyVisual : enemyVisuals) {
+			if(enemyVisual.getBounds().intersects(visualMainShip.getBounds()))
+			{
+				System.out.println("Enemy Collision Detected!");
+				remove(enemyVisual);
+				enemyVisuals.remove(enemyVisual);
 				break;
 			}
 		}
@@ -92,14 +105,16 @@ public class TestingLevel1 extends GraphicsProgram{
 	public void mouseMoved(MouseEvent e)
 	{
 		userSpaceshipMovement(e);
-		collisionDetection();
+		projectileCollisionDetection();
+		enemyCollisionDection();
 	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e)
 	{
 		userSpaceshipMovement(e);
-		collisionDetection();
+		projectileCollisionDetection();
+		enemyCollisionDection();
 	}
 
 	public void actionPerformed(ActionEvent e) {
