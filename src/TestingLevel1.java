@@ -8,6 +8,7 @@ import java.awt.event.*;
 
 public class TestingLevel1 extends GraphicsProgram{
 	private ArrayList<GOval> enemyBullets;
+	private ArrayList<GOval> userBullets;
 	private Timer movement;
 	private RandomGenerator rgen;
 	
@@ -16,11 +17,16 @@ public class TestingLevel1 extends GraphicsProgram{
 	public static final int PROGRAM_HEIGHT = 600;
 	public static final int SIZE = 25;
 	public static final int MS = 25;
-	public static final int PROJ_SPEED = 5;
-	public static final int PROJ_SIZE = 10;
+	public static final int ENEMY_PROJ_SPEED = 5;
+	public static final int ENEMY_PROJ_SIZE = 10;
+	private final int USER_PROJ_SPEED = 7;
+	private final int USER_PROJ_SIZE = 8;
 	
 	private int shootCooldown = 50; // Number of ticks between shots
 	private int ticksSinceLastShot = 0; // Counter for how many ticks have passed since the last shot
+	
+	private int mainShipShootCooldown = 20; // Control mainShip fire rate
+	private int mainShipTicksSinceLastShot = 0;
 
 	private ArrayList<GPolygon> enemyVisuals;
     private GPolygon visualMainShip;
@@ -32,6 +38,7 @@ public class TestingLevel1 extends GraphicsProgram{
 		rgen = RandomGenerator.getInstance();
 		enemyBullets = new ArrayList<>();
 		enemyVisuals = new ArrayList<>();
+		userBullets = new ArrayList<>();
 
 		//Declare and initialize the main Spaceship
 		
@@ -98,7 +105,7 @@ public class TestingLevel1 extends GraphicsProgram{
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		
+		shootFromUser();
 	}
 	
 	@Override
@@ -119,6 +126,7 @@ public class TestingLevel1 extends GraphicsProgram{
 
 	public void actionPerformed(ActionEvent e) {
 	    moveAllEnemyBullets();
+	    moveUserBullets();
 
 	    // Randomly decide if enemies shoot, with a cooldown
 	    for (GPolygon enemy : enemyVisuals) {
@@ -137,19 +145,30 @@ public class TestingLevel1 extends GraphicsProgram{
         double enemyTipY = y - SIZE / 2; // Top of the enemy (adjusted to visual size)
 
         // Create a bullet at the enemy's tip
-        GOval bullet = new GOval(enemyTipX - PROJ_SIZE / 2, enemyTipY - PROJ_SIZE / 2, PROJ_SIZE, PROJ_SIZE);
+        GOval bullet = new GOval(enemyTipX - ENEMY_PROJ_SIZE / 2, enemyTipY - ENEMY_PROJ_SIZE / 2, ENEMY_PROJ_SIZE, ENEMY_PROJ_SIZE);
         bullet.setFilled(true);
         bullet.setColor(Color.RED);
         add(bullet);
         enemyBullets.add(bullet);
     }
 	
+	private void shootFromUser() {
+	    double shipX = visualMainShip.getX() + SIZE / 2;
+	    double shipY = visualMainShip.getY();
+
+	    GOval bullet = new GOval(shipX - USER_PROJ_SIZE / 2, shipY - USER_PROJ_SIZE, USER_PROJ_SIZE, USER_PROJ_SIZE);
+	    bullet.setFilled(true);
+	    bullet.setColor(Color.GREEN);
+	    add(bullet);
+	    userBullets.add(bullet);
+	}
+	
 
 	private void moveAllEnemyBullets() {
 		ArrayList<GOval> bulletsToRemove = new ArrayList<>();
 
 		for (GOval bullet : enemyBullets) {
-			bullet.move(0, PROJ_SPEED); // move down
+			bullet.move(0, ENEMY_PROJ_SPEED); // move down
 			if (bullet.getY() > PROGRAM_HEIGHT) {
 				bulletsToRemove.add(bullet); // mark for removal
 			}
@@ -160,6 +179,42 @@ public class TestingLevel1 extends GraphicsProgram{
 			remove(bullet);
 			enemyBullets.remove(bullet);
 		}
+	}
+	
+	private void moveUserBullets() {
+	    ArrayList<GOval> bulletsToRemove = new ArrayList<>();
+	    ArrayList<GPolygon> enemiesToRemove = new ArrayList<>();
+
+	    for (GOval bullet : userBullets) {
+	        bullet.move(0, -USER_PROJ_SPEED); // Move up
+
+	        // Check if off-screen
+	        if (bullet.getY() < 0) {
+	            bulletsToRemove.add(bullet);
+	            continue;
+	        }
+
+	        // Check collision with enemies
+	        for (GPolygon enemy : enemyVisuals) {
+	            if (bullet.getBounds().intersects(enemy.getBounds())) {
+	                bulletsToRemove.add(bullet);
+	                enemiesToRemove.add(enemy);
+	                break;
+	            }
+	        }
+	    }
+
+	    // Remove bullets
+	    for (GOval bullet : bulletsToRemove) {
+	        remove(bullet);
+	        userBullets.remove(bullet);
+	    }
+
+	    // Remove hit enemies
+	    for (GPolygon enemy : enemiesToRemove) {
+	        remove(enemy);
+	        enemyVisuals.remove(enemy);
+	    }
 	}
 
 	public static void main(String[] args) {
