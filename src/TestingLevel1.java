@@ -24,7 +24,7 @@ public class TestingLevel1 extends GraphicsProgram {
 	private int enemyShootCooldown = 50;
 	private int enemyTicksSinceLastShot = 0;
 
-	private int mainShipShootCooldown = 6; // lower = faster shooting
+	private int mainShipShootCooldown = 13; // lower = faster shooting
 	private int mainShipTicksSinceLastShot = 0;
 
 	private boolean mousePressed = false;
