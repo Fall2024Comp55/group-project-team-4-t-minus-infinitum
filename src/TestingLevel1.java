@@ -20,6 +20,7 @@ public class TestingLevel1 extends GraphicsProgram {
 	public static final int ENEMY_PROJ_SIZE = 10;
 	private final int USER_PROJ_SPEED = 7;
 	private final int USER_PROJ_SIZE = 8;
+	private static final int ENEMY_MOVE_SPEED = 7;
 
 	private int enemyShootCooldown = 50;
 	private int enemyTicksSinceLastShot = 0;
@@ -119,7 +120,7 @@ public class TestingLevel1 extends GraphicsProgram {
 		moveAllEnemyBullets();
 		moveUserBullets();
 
-// Main ship shooting while mouse is held down
+        // Main ship shooting while mouse is held down
 		if (mousePressed && mainShipTicksSinceLastShot >= mainShipShootCooldown) {
 			shootFromUser();
 			mainShipTicksSinceLastShot = 0;
@@ -128,7 +129,7 @@ public class TestingLevel1 extends GraphicsProgram {
 			mainShipTicksSinceLastShot++;
 		}
 
-// Enemy shooting
+         // Enemy shooting
 		for (GPolygon enemy : enemyVisuals) {
 			enemyTicksSinceLastShot++;
 			if (enemyTicksSinceLastShot >= enemyShootCooldown) {
@@ -138,6 +139,47 @@ public class TestingLevel1 extends GraphicsProgram {
 				}
 			}
 		}
+		
+		 // Enemy movement with collision detection
+		 for (GPolygon enemy : new ArrayList<>(enemyVisuals)) {
+	            if (rgen.nextBoolean(0.05)) { // 5% chance to move
+	                double dx = rgen.nextBoolean() ? ENEMY_MOVE_SPEED : -ENEMY_MOVE_SPEED;
+
+	                // Check if the enemy would collide with another after moving
+	                boolean willCollide = false;
+	                double newX = enemy.getX() + dx;
+	                double newY = enemy.getY(); // No change in Y, since they only move left or right
+
+	                // Manually calculate the bounds of the moving enemy
+	                double enemyLeft = newX;
+	                double enemyRight = newX + SIZE;
+	                double enemyTop = newY;
+	                double enemyBottom = newY + SIZE;
+
+	                // Iterate through all other enemies
+	                for (GPolygon other : enemyVisuals) {
+	                    if (other != enemy) {
+	                        // Manually calculate the bounds of the other enemy
+	                        double otherLeft = other.getX();
+	                        double otherRight = other.getX() + SIZE;
+	                        double otherTop = other.getY();
+	                        double otherBottom = other.getY() + SIZE;
+
+	                        // Check if their bounding boxes overlap
+	                        if (enemyRight > otherLeft && enemyLeft < otherRight && enemyBottom > otherTop && enemyTop < otherBottom) {
+	                            willCollide = true;
+	                            break; // No need to check further if collision is detected
+	                        }
+	                    }
+	                }
+
+	                // If no collision, apply the move
+	                if (!willCollide) {
+	                    enemy.move(dx, 0);
+	                }
+	            }
+
+	        }
 	}
 
 	private void shootFromEnemy(double x, double y) {
