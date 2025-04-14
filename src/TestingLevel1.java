@@ -33,6 +33,11 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private GLabel timerLabel;
 	private GLabel scoreLabel;
 	private int msCounter = 0;
+	
+	private GLabel bonusTimerLabel;
+	private int bonusPoints = 0;
+	private long bonusStartTime;
+	private final int BONUS_TIME_LIMIT = 30; // seconds
 
 	private boolean mousePressed = false;
 
@@ -72,8 +77,15 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		timerLabel.setFont("SansSerif-bold-16");
 		add(timerLabel);
 		
+		//Added a timer tracking bonus points
+		bonusStartTime = System.currentTimeMillis();
+		bonusTimerLabel = new GLabel("Bonus Time: 30", 0, 60);
+		bonusTimerLabel.setFont("SansSerif-bold-16");
+		bonusTimerLabel.setColor(Color.BLACK);
+		add(bonusTimerLabel);
+		
 		//Added a point system
-		scoreLabel = new GLabel("Score: 0", 5, 40);
+		scoreLabel = new GLabel("Score: 0", 810, 20);
 		scoreLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
 		scoreLabel.setColor(Color.BLACK);
 		add(scoreLabel);
@@ -212,6 +224,16 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		     timerLabel.setLabel("Time: " + elapsedTime + "s");
 		     msCounter = 0;
 		 }
+		 
+		// Bonus countdown timer update
+		 long elapsedBonusTime = (System.currentTimeMillis() - bonusStartTime) / 1000;
+		 int remainingBonusTime = BONUS_TIME_LIMIT - (int) elapsedBonusTime;
+
+		 if (remainingBonusTime >= 0) {
+		 	bonusTimerLabel.setLabel("Bonus Time: " + remainingBonusTime);
+		 } else {
+		 	bonusTimerLabel.setLabel("Bonus Time: 0");
+		 }
 	}
 
 	private void shootFromEnemy(double x, double y) {
@@ -286,11 +308,23 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 			enemyVisuals.remove(enemy);
 		}
 		
+		if (enemyVisuals.isEmpty()) {
+	        long timeToClear = (System.currentTimeMillis() - bonusStartTime) / 1000;
+	        if (timeToClear <= BONUS_TIME_LIMIT) {
+	            bonusPoints += 1500; // Add to bonus points for finishing the level quickly
+	            updateBonusPointsLabel();
+	        }
+	        movement.stop();
+		}
 		
 	}
 	
 	private void updateScoreLabel() {
 	    scoreLabel.setLabel("Score: " + score);
+	}
+	
+	private void updateBonusPointsLabel() {
+	    bonusTimerLabel.setLabel("Bonus Points: " + bonusPoints); // Assuming you use the existing label for bonus points
 	}
 
 	public static void main(String[] args) {
