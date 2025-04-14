@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.awt.event.*;
 
-public class TestingLevel1 extends GraphicsProgram {
+public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private ArrayList<GOval> enemyBullets;
 	private ArrayList<GOval> userBullets;
 	private Timer movement;
@@ -27,6 +27,12 @@ public class TestingLevel1 extends GraphicsProgram {
 
 	private int mainShipShootCooldown = 13; // lower = faster shooting
 	private int mainShipTicksSinceLastShot = 0;
+	
+	private int elapsedTime = 0; // time in seconds
+	private int score = 0;
+	private GLabel timerLabel;
+	private GLabel scoreLabel;
+	private int msCounter = 0;
 
 	private boolean mousePressed = false;
 
@@ -60,6 +66,17 @@ public class TestingLevel1 extends GraphicsProgram {
 
 		movement = new Timer(MS, this);
 		movement.start();
+		
+		//Added a timer
+		timerLabel = new GLabel("Time: 0s", PROGRAM_WIDTH - 900, 20);
+		timerLabel.setFont("SansSerif-bold-16");
+		add(timerLabel);
+		
+		//Added a point system
+		scoreLabel = new GLabel("Score: 0", 5, 40);
+		scoreLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+		scoreLabel.setColor(Color.BLACK);
+		add(scoreLabel);
 
 		addMouseListeners();
 	}
@@ -92,14 +109,19 @@ public class TestingLevel1 extends GraphicsProgram {
 		}
 	}
 
+	//Firing from main ship using left mouse button
 	@Override
 	public void mousePressed(MouseEvent e) {
-		mousePressed = true;
+		 if (SwingUtilities.isLeftMouseButton(e)) {
+		        mousePressed = true;
+		    }
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		mousePressed = false;
+		 if (SwingUtilities.isLeftMouseButton(e)) {
+		        mousePressed = false;
+		    }
 	}
 
 	@Override
@@ -180,6 +202,16 @@ public class TestingLevel1 extends GraphicsProgram {
 	            }
 
 	        }
+		 
+		 
+		 //Added a timer counting how much time elapsed in the level
+		 msCounter += MS;
+
+		 if (msCounter >= 1000) { // 1000 milliseconds = 1 second
+		     elapsedTime++;
+		     timerLabel.setLabel("Time: " + elapsedTime + "s");
+		     msCounter = 0;
+		 }
 	}
 
 	private void shootFromEnemy(double x, double y) {
@@ -237,6 +269,8 @@ public class TestingLevel1 extends GraphicsProgram {
 				if (bullet.getBounds().intersects(enemy.getBounds())) {
 					bulletsToRemove.add(bullet);
 					enemiesToRemove.add(enemy);
+					score += 100; // +100 points per enemy
+					updateScoreLabel();
 					break;
 				}
 			}
@@ -251,6 +285,12 @@ public class TestingLevel1 extends GraphicsProgram {
 			remove(enemy);
 			enemyVisuals.remove(enemy);
 		}
+		
+		
+	}
+	
+	private void updateScoreLabel() {
+	    scoreLabel.setLabel("Score: " + score);
 	}
 
 	public static void main(String[] args) {
