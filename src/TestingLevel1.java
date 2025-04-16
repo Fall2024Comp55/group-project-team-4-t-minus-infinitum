@@ -105,6 +105,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 				System.out.println("Collision Detected!");
 				enemyBullets.remove(bullet);
 				remove(bullet);
+				gameOver();
 				break;
 			}
 		}
@@ -116,6 +117,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 				System.out.println("Enemy Collision Detected!");
 				remove(enemyVisual);
 				enemyVisuals.remove(enemyVisual);
+				gameOver();
 				break;
 			}
 		}
@@ -318,6 +320,27 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		}
 		
 	}
+	private void gameOver() {
+	    movement.stop(); // Stop the timer
+	    removeAll(); // Clear the screen
+
+	    GLabel gameOverLabel = new GLabel("GAME OVER", PROGRAM_WIDTH / 2 - 100, PROGRAM_HEIGHT / 2);
+	    gameOverLabel.setFont(new Font("SansSerif", Font.BOLD, 36));
+	    gameOverLabel.setColor(Color.RED);
+	    add(gameOverLabel);
+
+	    GLabel finalScoreLabel = new GLabel("Score: " + score, PROGRAM_WIDTH / 2 - 60, PROGRAM_HEIGHT / 2 + 50);
+	    finalScoreLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+	    add(finalScoreLabel);
+
+	    GLabel survivedLabel = new GLabel("You survived: " + elapsedTime + " seconds", PROGRAM_WIDTH / 2 - 110, PROGRAM_HEIGHT / 2 + 90);
+	    survivedLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+	    survivedLabel.setColor(Color.BLUE);
+	    add(survivedLabel);
+	}
+
+
+
 	
 	private void updateScoreLabel() {
 	    scoreLabel.setLabel("Score: " + score);
