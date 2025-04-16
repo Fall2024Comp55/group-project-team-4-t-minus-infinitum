@@ -244,6 +244,9 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		 } else {
 		 	bonusTimerLabel.setLabel("Bonus Time: 0");
 		 }
+		 
+		 projectileCollisionDetection();
+		 enemyCollisionDetection();
 	}
 
 	private void shootFromEnemy(double x, double y) {
