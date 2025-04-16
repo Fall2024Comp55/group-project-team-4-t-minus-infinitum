@@ -40,12 +40,16 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private final int BONUS_TIME_LIMIT = 30; // seconds
 
 	private boolean mousePressed = false;
+	private boolean gameOverFlag = false; 
 
 	private ArrayList<GPolygon> enemyVisuals;
 	private GPolygon visualMainShip;
+	private GRect retryButton;
+	private GLabel retryLabel;
 
 	public void init() {
 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
+		addMouseListeners();
 	}
 
 	public void run() {
@@ -90,7 +94,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		scoreLabel.setColor(Color.BLACK);
 		add(scoreLabel);
 
-		addMouseListeners();
+		
 	}
 
 	public void userSpaceshipMovement(MouseEvent e) {
@@ -128,6 +132,10 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	public void mousePressed(MouseEvent e) {
 		 if (SwingUtilities.isLeftMouseButton(e)) {
 		        mousePressed = true;
+		    }
+		 // Retry button clicked
+		 if (gameOverFlag && retryButton != null && retryButton.contains(e.getX(), e.getY())) {
+		        restartGame();
 		    }
 	}
 
@@ -321,6 +329,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		
 	}
 	private void gameOver() {
+		gameOverFlag = true;
 	    movement.stop(); // Stop the timer
 	    removeAll(); // Clear the screen
 
@@ -329,7 +338,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	    gameOverLabel.setColor(Color.RED);
 	    add(gameOverLabel);
 
-	    GLabel finalScoreLabel = new GLabel("Score: " + score, PROGRAM_WIDTH / 2 - 60, PROGRAM_HEIGHT / 2 + 50);
+	    GLabel finalScoreLabel = new GLabel("Score: " + score, PROGRAM_WIDTH / 2 - 40, PROGRAM_HEIGHT / 2 + 50);
 	    finalScoreLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
 	    add(finalScoreLabel);
 
@@ -337,11 +346,44 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	    survivedLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
 	    survivedLabel.setColor(Color.BLUE);
 	    add(survivedLabel);
+	    
+	    // Retry Button
+	    retryButton = new GRect(PROGRAM_WIDTH / 2 - 50, PROGRAM_HEIGHT / 2 + 130, 100, 40);
+	    retryButton.setFilled(true);
+	    retryButton.setFillColor(Color.LIGHT_GRAY);
+	    add(retryButton);
+
+	    retryLabel = new GLabel("Retry", PROGRAM_WIDTH / 2 - 25, PROGRAM_HEIGHT / 2 + 153);
+	    retryLabel.setFont("SansSerif-bold-18");
+	    add(retryLabel);
+	}
+	
+	private void restartGame() {
+		if (movement != null) {
+		    movement.stop();
+		}
+		    
+	    removeAll();
+
+	    // Reset game state
+	    elapsedTime = 0;
+	    score = 0;
+	    msCounter = 0;
+	    enemyTicksSinceLastShot = 0;
+	    mainShipTicksSinceLastShot = 0;
+	    bonusStartTime = System.currentTimeMillis();
+	    mousePressed = false;
+	    gameOverFlag = false;
+
+	    enemyBullets.clear();
+	    userBullets.clear();
+	    enemyVisuals.clear();
+
+	    // Restart run logic
+	    run();
+	    
 	}
 
-
-
-	
 	private void updateScoreLabel() {
 	    scoreLabel.setLabel("Score: " + score);
 	}
