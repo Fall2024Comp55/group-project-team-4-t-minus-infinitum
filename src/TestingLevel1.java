@@ -229,7 +229,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		 //Added a timer counting how much time elapsed in the level
 		 msCounter += MS;
 
-		 if (msCounter >= 1000) { // 1000 milliseconds = 1 second
+		 if (msCounter >= 1000) { // 1000 milliseconds = 1 seconds
 		     elapsedTime++;
 		     timerLabel.setLabel("Time: " + elapsedTime + "s");
 		     msCounter = 0;
