@@ -228,7 +228,6 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 					enemy.move(dx, 0);
 				}
 			}
-
 		}
 
 		// Added a timer counting how much time elapsed in the level
