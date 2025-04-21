@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-public class TestingLevel1 extends GraphicsProgram implements ActionListener {
+public class TestingLevel3 extends GraphicsProgram implements ActionListener {
 	private ArrayList<GOval> enemyBullets;
 	private ArrayList<GOval> userBullets;
 	private Timer movement;
@@ -17,11 +17,11 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	public static final int PROGRAM_HEIGHT = 600;
 	public static final int SIZE = 25;
 	public static final int MS = 25;
-	public static final int ENEMY_PROJ_SPEED = 5;
+	public static final int ENEMY_PROJ_SPEED = 9;
 	public static final int ENEMY_PROJ_SIZE = 10;
 	private final int USER_PROJ_SPEED = 7;
 	private final int USER_PROJ_SIZE = 8;
-	private static final int ENEMY_MOVE_SPEED = 7;
+	private static final int ENEMY_MOVE_SPEED = 11;
 
 	private int enemyShootCooldown = 50;
 	private int enemyTicksSinceLastShot = 0;
@@ -38,7 +38,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private GLabel bonusTimerLabel;
 	private int bonusPoints = 0;
 	private long bonusStartTime;
-	private final int BONUS_TIME_LIMIT = 30; // seconds
+	private final int BONUS_TIME_LIMIT = 90; // seconds
 
 	private boolean mousePressed = false;
 	private boolean gameOverFlag = false;
@@ -67,12 +67,12 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		visualMainShip = mainship.getVisualMainShip();
 		add(visualMainShip);
 
-		Enemyship1[] enemies = { new Enemyship1(SpaceshipType.eType1, 5, 7),
-				new Enemyship1(SpaceshipType.eType1, 5, 11), new Enemyship1(SpaceshipType.eType1, 5, 15),
-				new Enemyship1(SpaceshipType.eType1, 1, 5), new Enemyship1(SpaceshipType.eType1, 1, 9),
-				new Enemyship1(SpaceshipType.eType1, 1, 13), new Enemyship1(SpaceshipType.eType1, 1, 17) };
+		Enemyship3[] enemies = { new Enemyship3(SpaceshipType.eType3, 5, 7),
+				new Enemyship3(SpaceshipType.eType3, 5, 11), new Enemyship3(SpaceshipType.eType3, 5, 15),
+				new Enemyship3(SpaceshipType.eType3, 1, 5), new Enemyship3(SpaceshipType.eType3, 1, 9),
+				new Enemyship3(SpaceshipType.eType3, 1, 13), new Enemyship3(SpaceshipType.eType3, 1, 17) };
 
-		for (Enemyship1 enemy : enemies) {
+		for (Enemyship3 enemy : enemies) {
 			GPolygon visual = enemy.getVisual();
 			add(visual);
 			enemyVisuals.add(visual);
@@ -416,6 +416,6 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new TestingLevel1().start();
+		new TestingLevel3().start();
 	}
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-public class TestingLevel1 extends GraphicsProgram implements ActionListener {
+public class TestingLevel5 extends GraphicsProgram implements ActionListener {
 	private ArrayList<GOval> enemyBullets;
 	private ArrayList<GOval> userBullets;
 	private Timer movement;
@@ -17,11 +17,11 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	public static final int PROGRAM_HEIGHT = 600;
 	public static final int SIZE = 25;
 	public static final int MS = 25;
-	public static final int ENEMY_PROJ_SPEED = 5;
+	public static final int ENEMY_PROJ_SPEED = 13;
 	public static final int ENEMY_PROJ_SIZE = 10;
 	private final int USER_PROJ_SPEED = 7;
 	private final int USER_PROJ_SIZE = 8;
-	private static final int ENEMY_MOVE_SPEED = 7;
+	private static final int ENEMY_MOVE_SPEED = 15;
 
 	private int enemyShootCooldown = 50;
 	private int enemyTicksSinceLastShot = 0;
@@ -35,10 +35,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private GLabel scoreLabel;
 	private int msCounter = 0;
 
-	private GLabel bonusTimerLabel;
-	private int bonusPoints = 0;
-	private long bonusStartTime;
-	private final int BONUS_TIME_LIMIT = 30; // seconds
+	
 
 	private boolean mousePressed = false;
 	private boolean gameOverFlag = false;
@@ -67,12 +64,12 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		visualMainShip = mainship.getVisualMainShip();
 		add(visualMainShip);
 
-		Enemyship1[] enemies = { new Enemyship1(SpaceshipType.eType1, 5, 7),
-				new Enemyship1(SpaceshipType.eType1, 5, 11), new Enemyship1(SpaceshipType.eType1, 5, 15),
-				new Enemyship1(SpaceshipType.eType1, 1, 5), new Enemyship1(SpaceshipType.eType1, 1, 9),
-				new Enemyship1(SpaceshipType.eType1, 1, 13), new Enemyship1(SpaceshipType.eType1, 1, 17) };
+		Enemyship5[] enemies = { new Enemyship5(SpaceshipType.eType5, 5, 7),
+				new Enemyship5(SpaceshipType.eType5, 5, 11), new Enemyship5(SpaceshipType.eType5, 5, 15),
+				new Enemyship5(SpaceshipType.eType5, 1, 5), new Enemyship5(SpaceshipType.eType5, 1, 9),
+				new Enemyship5(SpaceshipType.eType5, 1, 13), new Enemyship5(SpaceshipType.eType5, 1, 17) };
 
-		for (Enemyship1 enemy : enemies) {
+		for (Enemyship5 enemy : enemies) {
 			GPolygon visual = enemy.getVisual();
 			add(visual);
 			enemyVisuals.add(visual);
@@ -86,12 +83,8 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		timerLabel.setFont("SansSerif-bold-16");
 		add(timerLabel);
 
-		// Added a timer tracking bonus points
-		bonusStartTime = System.currentTimeMillis();
-		bonusTimerLabel = new GLabel("Bonus Time: 30", 0, 60);
-		bonusTimerLabel.setFont("SansSerif-bold-16");
-		bonusTimerLabel.setColor(Color.BLACK);
-		add(bonusTimerLabel);
+		
+		
 
 		// Added a point system
 		scoreLabel = new GLabel("Score: 0", 810, 20);
@@ -240,16 +233,8 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 			msCounter = 0;
 		}
 
-		// Bonus countdown timer update
-		long elapsedBonusTime = (System.currentTimeMillis() - bonusStartTime) / 1000;
-		int remainingBonusTime = BONUS_TIME_LIMIT - (int) elapsedBonusTime;
-
-		if (remainingBonusTime >= 0) {
-			bonusTimerLabel.setLabel("Bonus Time: " + remainingBonusTime);
-		} else {
-			bonusTimerLabel.setLabel("Bonus Time: 0");
-		}
-
+		
+		
 		projectileCollisionDetection();
 		enemyCollisionDetection();
 	}
@@ -326,14 +311,11 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 			enemyVisuals.remove(enemy);
 		}
 
-		if (enemyVisuals.isEmpty()) {
-			long timeToClear = (System.currentTimeMillis() - bonusStartTime) / 1000;
-			if (timeToClear <= BONUS_TIME_LIMIT) {
-				bonusPoints += 1500; // Add to bonus points for finishing the level quickly
-				updateBonusPointsLabel();
-			}
-			movement.stop();
-		}
+	
+		
+			
+			
+		
 
 	}
 
@@ -382,7 +364,6 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		msCounter = 0;
 		enemyTicksSinceLastShot = 0;
 		mainShipTicksSinceLastShot = 0;
-		bonusStartTime = System.currentTimeMillis();
 		mousePressed = false;
 		gameOverFlag = false;
 
@@ -399,10 +380,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		scoreLabel.setLabel("Score: " + score);
 	}
 
-	private void updateBonusPointsLabel() {
-		bonusTimerLabel.setLabel("Bonus Points: " + bonusPoints); // Assuming you use the existing label for bonus
-																	// points
-	}
+	
 
 	private void hideCursor() {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -416,6 +394,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new TestingLevel1().start();
+		new TestingLevel5().start();
 	}
 }
+
