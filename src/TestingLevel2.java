@@ -48,6 +48,8 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
 	private GPolygon visualMainShip;
 	private GRect retryButton;
 	private GLabel retryLabel;
+	
+	private int waveNumber = 1;
 
 	public void init() {
 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
@@ -68,16 +70,8 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
 		visualMainShip = mainship.getVisualMainShip();
 		add(visualMainShip);
 
-		Enemyship2[] enemies = { new Enemyship2(SpaceshipType.eType2, 5, 7),
-				new Enemyship2(SpaceshipType.eType2, 5, 11), new Enemyship2(SpaceshipType.eType2, 5, 15),
-				new Enemyship2(SpaceshipType.eType2, 1, 5), new Enemyship2(SpaceshipType.eType2, 1, 9),
-				new Enemyship2(SpaceshipType.eType2, 1, 13), new Enemyship2(SpaceshipType.eType2, 1, 17) };
-
-		for (Enemyship2 enemy : enemies) {
-			GPolygon visual = enemy.getVisual();
-			add(visual);
-			enemyVisuals.add(visual);
-		}
+		
+		spawnWave(1);
 
 		movement = new Timer(MS, this);
 		movement.start();
@@ -326,14 +320,19 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
 			remove(enemy);
 			enemyVisuals.remove(enemy);
 		}
-
 		if (enemyVisuals.isEmpty()) {
-			long timeToClear = (System.currentTimeMillis() - bonusStartTime) / 1000;
-			if (timeToClear <= BONUS_TIME_LIMIT) {
-				bonusPoints += 1500; // Add to bonus points for finishing the level quickly
-				updateBonusPointsLabel();
+			if (waveNumber == 1) {
+				waveNumber = 2;
+				spawnWave(2);
+			} else {
+				// Level completed
+				long timeToClear = (System.currentTimeMillis() - bonusStartTime) / 1000;
+				if (timeToClear <= BONUS_TIME_LIMIT) {
+					bonusPoints += 1500;
+					updateBonusPointsLabel();
+				}
+				movement.stop();
 			}
-			movement.stop();
 		}
 
 	}
@@ -394,6 +393,44 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
 		// Restart run logic
 		run();
 
+	}
+	
+	private void spawnWave(int wave) {
+	    enemyVisuals.clear();
+
+	    if (wave == 1) {
+	        Enemyship1[] wave1Enemies = {
+	            new Enemyship1(SpaceshipType.eType1, 5, 7),
+	            new Enemyship1(SpaceshipType.eType1, 5, 11),
+	            new Enemyship1(SpaceshipType.eType1, 5, 15),
+	            new Enemyship1(SpaceshipType.eType1, 1, 5),
+	            new Enemyship1(SpaceshipType.eType1, 1, 9),
+	            new Enemyship1(SpaceshipType.eType1, 1, 13),
+	            new Enemyship1(SpaceshipType.eType1, 1, 17)
+	        };
+
+	        for (Enemyship1 enemy : wave1Enemies) {
+	            GPolygon enemyVisual = enemy.getVisual();
+	            enemyVisuals.add(enemyVisual);
+	            add(enemyVisual);
+	        }
+	    } else if (wave == 2) {
+	        Enemyship2[] wave2Enemies = {
+	            new Enemyship2(SpaceshipType.eType2, 4, 6),
+	            new Enemyship2(SpaceshipType.eType2, 4, 9),
+	            new Enemyship2(SpaceshipType.eType2, 4, 12),
+	            new Enemyship2(SpaceshipType.eType2, 4, 15),
+	            new Enemyship2(SpaceshipType.eType2, 1, 7),
+	            new Enemyship2(SpaceshipType.eType2, 1, 10),
+	            new Enemyship2(SpaceshipType.eType2, 1, 13)
+	        };
+
+	        for (Enemyship2 enemy : wave2Enemies) {
+	            GPolygon enemyVisual = enemy.getVisual();
+	            enemyVisuals.add(enemyVisual);
+	            add(enemyVisual);
+	        }
+	    }
 	}
 
 	private void updateScoreLabel() {
