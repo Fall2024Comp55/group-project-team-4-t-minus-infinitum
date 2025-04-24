@@ -44,6 +44,7 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private boolean gameOverFlag = false;
 
 	private ArrayList<GPolygon> enemyVisuals;
+	
 	private GPolygon visualMainShip;
 	private GRect retryButton;
 	private GLabel retryLabel;
@@ -304,16 +305,20 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 				continue;
 			}
 
-			for (GPolygon enemy : enemyVisuals) {
-				if (bullet.getBounds().intersects(enemy.getBounds())) {
-					bulletsToRemove.add(bullet);
-					enemiesToRemove.add(enemy);
-					score += 100; // +100 points per enemy
-					updateScoreLabel();
-					break;
-				}
-			}
-		}
+			 for (EnemyShipBasic enemy : new ArrayList<>(enemyVisuals)) {
+		            if (bullet.getBounds().intersects(enemy.getVisual().getBounds())) {
+		                bulletsToRemove.add(bullet);
+		                enemy.reduceHitPoints(); // Reduce the enemy's hit points
+
+		                if (enemy.isDestroyed()) {
+		                    enemiesToRemove.add(enemy); // Mark enemy for removal
+		                    score += 100; // Add points for destroying the enemy
+		                    updateScoreLabel();
+		                }
+		                break;
+		            }
+		        }
+		    }
 
 		for (GOval bullet : bulletsToRemove) {
 			remove(bullet);

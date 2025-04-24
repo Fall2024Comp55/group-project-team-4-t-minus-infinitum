@@ -5,14 +5,16 @@ public class EnemyShipBasic{
 	private int startRow;
 	private int startColumn;
 	private SpaceshipType sType;
+	private int hitPoints;
 	
 	 public static final int SIZE = 40;
 	
-	public EnemyShipBasic(SpaceshipType Enemyship1, int startRow, int startCol)
+	public EnemyShipBasic(SpaceshipType Enemyship1, int startRow, int startCol, int hitPoints)
 	{
 		this.startRow = startRow;
 		this.startColumn = startCol;
 		this.sType = Enemyship1;
+		this.hitPoints = hitPoints;
 	}
 	
 	//Getter and setter for Start Row
@@ -47,6 +49,25 @@ public class EnemyShipBasic{
 	{
 		this.sType = Enemyship1;
 	}
+	
+	//Getter and setter for health
+	public int getHitPoints()
+	{
+		return hitPoints;
+	}
+		
+	public void setPoints (int hitPoints)
+	{
+		this.hitPoints = hitPoints;
+	}
+	
+	public void reduceHitPoints() {
+        hitPoints--;
+    }
+
+    public boolean isDestroyed() {
+        return hitPoints <= 0;
+    }
 	
 	public GPolygon getVisual() {
 	    int x = startColumn * SIZE;

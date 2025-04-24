@@ -4,7 +4,7 @@ import java.awt.*;
 public class Enemyship4 extends EnemyShipBasic{
 	
 	public Enemyship4(SpaceshipType Enemyship4, int startRow, int startCol) {
-		super(Enemyship4, startRow, startCol);
+		super(Enemyship4, startRow, startCol,4);
 	}
 
 	public GPolygon getVisual() {
