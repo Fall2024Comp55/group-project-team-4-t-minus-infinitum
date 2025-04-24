@@ -17,7 +17,7 @@ public class EnemyShipBasic{
 		this.hitPoints = hitPoints;
 	}
 	
-	//Getter and setter for Start Row
+	//Getter and setter for Start Rows
 	public int getStartRow()
 	{
 		return startRow;

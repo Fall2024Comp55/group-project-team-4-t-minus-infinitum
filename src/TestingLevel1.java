@@ -44,7 +44,6 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private boolean gameOverFlag = false;
 
 	private ArrayList<GPolygon> enemyVisuals;
-	
 	private GPolygon visualMainShip;
 	private GRect retryButton;
 	private GLabel retryLabel;
