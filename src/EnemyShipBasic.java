@@ -56,7 +56,7 @@ public class EnemyShipBasic{
 		return hitPoints;
 	}
 		
-	public void setPoints (int hitPoints)
+	public void setHitPoints (int hitPoints)
 	{
 		this.hitPoints = hitPoints;
 	}
@@ -67,6 +67,10 @@ public class EnemyShipBasic{
 
     public boolean isDestroyed() {
         return hitPoints <= 0;
+    }
+    
+    public void applyDamage(int damage) {
+        hitPoints -= damage;
     }
 	
 	public GPolygon getVisual() {

@@ -47,6 +47,10 @@ public class TestingLevel4 extends GraphicsProgram implements ActionListener {
 	private GPolygon visualMainShip;
 	private GRect retryButton;
 	private GLabel retryLabel;
+	
+    private boolean levelEnded = false;
+	
+	private int waveNumber = 1;
 
 	public void init() {
 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
@@ -67,16 +71,7 @@ public class TestingLevel4 extends GraphicsProgram implements ActionListener {
 		visualMainShip = mainship.getVisualMainShip();
 		add(visualMainShip);
 
-		Enemyship4[] enemies = { new Enemyship4(SpaceshipType.eType4, 5, 7),
-				new Enemyship4(SpaceshipType.eType4, 5, 11), new Enemyship4(SpaceshipType.eType4, 5, 15),
-				new Enemyship4(SpaceshipType.eType4, 1, 5), new Enemyship4(SpaceshipType.eType4, 1, 9),
-				new Enemyship4(SpaceshipType.eType4, 1, 13), new Enemyship4(SpaceshipType.eType4, 1, 17) };
-
-		for (Enemyship4 enemy : enemies) {
-			GPolygon visual = enemy.getVisual();
-			add(visual);
-			enemyVisuals.add(visual);
-		}
+		spawnWave(1);
 
 		movement = new Timer(MS, this);
 		movement.start();
@@ -156,6 +151,7 @@ public class TestingLevel4 extends GraphicsProgram implements ActionListener {
 		userSpaceshipMovement(e);
 		projectileCollisionDetection();
 		enemyCollisionDetection();
+		if (levelEnded) return;// Stop the ship from moving
 	}
 
 	@Override
@@ -252,6 +248,7 @@ public class TestingLevel4 extends GraphicsProgram implements ActionListener {
 
 		projectileCollisionDetection();
 		enemyCollisionDetection();
+		if (levelEnded) return;
 	}
 
 	private void shootFromEnemy(double x, double y) {
@@ -327,15 +324,77 @@ public class TestingLevel4 extends GraphicsProgram implements ActionListener {
 		}
 
 		if (enemyVisuals.isEmpty()) {
-			long timeToClear = (System.currentTimeMillis() - bonusStartTime) / 1000;
-			if (timeToClear <= BONUS_TIME_LIMIT) {
-				bonusPoints += 1500; // Add to bonus points for finishing the level quickly
-				updateBonusPointsLabel();
-			}
-			movement.stop();
+			if (waveNumber == 1) {
+ 				waveNumber = 2;
+ 				spawnWave(2);
+ 			} else {
+ 				// Level completed
+ 				long timeToClear = (System.currentTimeMillis() - bonusStartTime) / 1000;
+ 				if (timeToClear <= BONUS_TIME_LIMIT) {
+ 					bonusPoints += 1500;
+ 					updateBonusPointsLabel();
+ 				}
+ 				movement.stop();
+ 				showEndLevelSummary();
+ 			}
 		}
+	}
+	
+	private void showEndLevelSummary() {
+		levelEnded = true;
+		gameOverFlag = true; 
+	    EndLevelSummary summary = new EndLevelSummary(score, bonusPoints, elapsedTime, this::nextLevel);
+	    removeAll();
+	    showCursor();
+	    
+	    add(summary, (PROGRAM_WIDTH - summary.getWidth()) / 2, (PROGRAM_HEIGHT - summary.getHeight()) / 2);
 
 	}
+ 	
+ 	private void nextLevel() {
+	    // Logic to transition to the next level
+	    System.out.println("Moving to next level...");
+	    TestingLevel5 next = new TestingLevel5();
+	    next.start(); // or next.startApplication() if needed
+	}
+		
+		private void spawnWave(int wave) {
+	 	    enemyVisuals.clear();
+	 
+	 	    if (wave == 1) {
+	 	        Enemyship3[] wave1Enemies = {
+	 	            new Enemyship3(SpaceshipType.eType3, 5, 7),
+	 	            new Enemyship3(SpaceshipType.eType3, 5, 11),
+	 	            new Enemyship3(SpaceshipType.eType3, 5, 15),
+	 	            new Enemyship3(SpaceshipType.eType3, 1, 5),
+	 	            new Enemyship3(SpaceshipType.eType3, 1, 9),
+	 	            new Enemyship3(SpaceshipType.eType3, 1, 13),
+	 	            new Enemyship3(SpaceshipType.eType3, 1, 17)
+	 	        };
+	 
+	 	        for (Enemyship3 enemy : wave1Enemies) {
+	 	            GPolygon enemyVisual = enemy.getVisual();
+	 	            enemyVisuals.add(enemyVisual);
+	 	            add(enemyVisual);
+	 	        }
+	 	    } else if (wave == 2) {
+	 	        Enemyship4[] wave2Enemies = {
+	 	            new Enemyship4(SpaceshipType.eType4, 5, 7),
+	 	            new Enemyship4(SpaceshipType.eType4, 5, 11),
+	 	            new Enemyship4(SpaceshipType.eType4, 5, 15),
+	 	            new Enemyship4(SpaceshipType.eType4, 1, 5),
+	 	            new Enemyship4(SpaceshipType.eType4, 1, 9),
+	 	            new Enemyship4(SpaceshipType.eType4, 1, 13),
+	 	            new Enemyship4(SpaceshipType.eType4, 1, 17)
+	 	        };
+	 
+	 	        for (Enemyship4 enemy : wave2Enemies) {
+	 	            GPolygon enemyVisual = enemy.getVisual();
+	 	            enemyVisuals.add(enemyVisual);
+	 	            add(enemyVisual);
+	 	        }
+	 	    }
+	 	}
 
 	private void gameOver() {
 		gameOverFlag = true;

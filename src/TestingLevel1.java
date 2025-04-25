@@ -47,6 +47,8 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private GPolygon visualMainShip;
 	private GRect retryButton;
 	private GLabel retryLabel;
+	
+	private boolean levelEnded = false;
 
 	public void init() {
 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
@@ -109,6 +111,9 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	}
 
 	public void projectileCollisionDetection() {
+		if (gameOverFlag) {
+	        return; // Don't process mouse events if the game is over
+	    }
 		for (GOval bullet : enemyBullets) {
 			if (bullet.getBounds().intersects(visualMainShip.getBounds())) {
 				System.out.println("Collision Detected!");
@@ -153,9 +158,15 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		if (gameOverFlag) {
+	        return; // Don't process mouse events if the game is over
+	    }
 		userSpaceshipMovement(e);
 		projectileCollisionDetection();
 		enemyCollisionDetection();
+		if (levelEnded) return; // Stop the ship from moving
+		
+		
 	}
 
 	@Override
@@ -248,7 +259,8 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		} else {
 			bonusTimerLabel.setLabel("Bonus Time: 0");
 		}
-
+		
+		if (levelEnded) return;
 		projectileCollisionDetection();
 		enemyCollisionDetection();
 	}
@@ -304,20 +316,16 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 				continue;
 			}
 
-			 for (EnemyShipBasic enemy : new ArrayList<>(enemyVisuals)) {
-		            if (bullet.getBounds().intersects(enemy.getVisual().getBounds())) {
-		                bulletsToRemove.add(bullet);
-		                enemy.reduceHitPoints(); // Reduce the enemy's hit points
-
-		                if (enemy.isDestroyed()) {
-		                    enemiesToRemove.add(enemy); // Mark enemy for removal
-		                    score += 100; // Add points for destroying the enemy
-		                    updateScoreLabel();
-		                }
-		                break;
-		            }
-		        }
-		    }
+			for (GPolygon enemy : enemyVisuals) {
+				if (bullet.getBounds().intersects(enemy.getBounds())) {
+					bulletsToRemove.add(bullet);
+					enemiesToRemove.add(enemy);
+					score += 100; // +100 points per enemy
+					updateScoreLabel();
+					break;
+				}
+			}
+		}
 
 		for (GOval bullet : bulletsToRemove) {
 			remove(bullet);
@@ -336,8 +344,29 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 				updateBonusPointsLabel();
 			}
 			movement.stop();
+			showEndLevelSummary();// Show the end level summary
 		}
 
+	}
+	
+	private void showEndLevelSummary() {
+		levelEnded = true;
+		gameOverFlag = true; 
+	    EndLevelSummary summary = new EndLevelSummary(score, bonusPoints, elapsedTime, this::nextLevel);
+	    removeAll();
+	    showCursor();
+	    
+	    add(summary, (PROGRAM_WIDTH - summary.getWidth()) / 2, (PROGRAM_HEIGHT - summary.getHeight()) / 2);
+
+
+	    
+	}
+	
+	private void nextLevel() {
+	    // Logic to transition to the next level
+	    System.out.println("Moving to next level...");
+	    TestingLevel2 next = new TestingLevel2();
+	    next.start(); // or next.startApplication() if needed
 	}
 
 	private void gameOver() {
