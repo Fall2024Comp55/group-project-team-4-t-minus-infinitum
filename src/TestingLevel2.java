@@ -50,6 +50,7 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
 	
 	private int waveNumber = 1;
 	private boolean levelEnded = false;
+	private GameData gameData;
 
 	public void init() {
 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
@@ -95,6 +96,10 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
 		add(scoreLabel);
 		hideCursor();
 
+	}
+	
+	public void setGameData (GameData data) {
+		this.gameData = data;
 	}
 
 	public void userSpaceshipMovement(MouseEvent e) {
@@ -194,13 +199,13 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
 	        }
 	    } else if (wave == 2) {
 	        Enemyship2[] wave2Enemies = {
-	            new Enemyship2(SpaceshipType.eType2, 4, 6),
-	            new Enemyship2(SpaceshipType.eType2, 4, 9),
-	            new Enemyship2(SpaceshipType.eType2, 4, 12),
-	            new Enemyship2(SpaceshipType.eType2, 4, 15),
-	            new Enemyship2(SpaceshipType.eType2, 1, 7),
-	            new Enemyship2(SpaceshipType.eType2, 1, 10),
-	            new Enemyship2(SpaceshipType.eType2, 1, 13)
+	            new Enemyship2(SpaceshipType.eType2, 5, 7),
+	            new Enemyship2(SpaceshipType.eType2, 5, 11),
+	            new Enemyship2(SpaceshipType.eType2, 5, 15),
+	            new Enemyship2(SpaceshipType.eType2, 1, 5),
+	            new Enemyship2(SpaceshipType.eType2, 1, 9),
+	            new Enemyship2(SpaceshipType.eType2, 1, 13),
+	            new Enemyship2(SpaceshipType.eType2, 1, 17)
 	        };
 
 	        for (Enemyship2 enemy : wave2Enemies) {
@@ -395,6 +400,14 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
  	private void showEndLevelSummary() {
 		levelEnded = true;
 		gameOverFlag = true; 
+		
+		// Update gameData with this level's results
+	    if (gameData != null) {
+	        gameData.addScore(score);
+	        gameData.addBonus(bonusPoints);
+	       //gameData.addTimeSurvived(elapsedTime);
+	    }
+	    
 	    EndLevelSummary summary = new EndLevelSummary(score, bonusPoints, elapsedTime, this::nextLevel);
 	    removeAll();
 	    showCursor();
@@ -407,6 +420,7 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
 	    // Logic to transition to the next level
 	    System.out.println("Moving to next level...");
 	    TestingLevel3 next = new TestingLevel3();
+	    next.setGameData(gameData);
 	    next.start(); // or next.startApplication() if needed
 	}
  	
@@ -490,5 +504,6 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
  
  	public static void main(String[] args) {
  		new TestingLevel2().start();
+ 		 
  	}
  }

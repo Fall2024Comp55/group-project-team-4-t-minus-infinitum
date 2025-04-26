@@ -49,6 +49,8 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private GLabel retryLabel;
 	
 	private boolean levelEnded = false;
+	
+	private GameData gameData;
 
 	public void init() {
 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
@@ -102,6 +104,10 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 		add(scoreLabel);
 		hideCursor();
 
+	}
+	
+	public void setGameData (GameData data) {
+		this.gameData = data;
 	}
 
 	public void userSpaceshipMovement(MouseEvent e) {
@@ -352,6 +358,14 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	private void showEndLevelSummary() {
 		levelEnded = true;
 		gameOverFlag = true; 
+		
+		// Update gameData with this level's results
+	    if (gameData != null) {
+	        gameData.addScore(score);
+	        gameData.addBonus(bonusPoints);
+	       //gameData.addTimeSurvived(elapsedTime);
+	    }
+	    
 	    EndLevelSummary summary = new EndLevelSummary(score, bonusPoints, elapsedTime, this::nextLevel);
 	    removeAll();
 	    showCursor();
@@ -366,8 +380,11 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	    // Logic to transition to the next level
 	    System.out.println("Moving to next level...");
 	    TestingLevel2 next = new TestingLevel2();
+	    next.setGameData(gameData);
 	    next.start(); // or next.startApplication() if needed
 	}
+	
+
 
 	private void gameOver() {
 		gameOverFlag = true;
@@ -448,6 +465,10 @@ public class TestingLevel1 extends GraphicsProgram implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		new TestingLevel1().start();
+		GameData data = new GameData();
+	    TestingLevel1 level1 = new TestingLevel1();
+	    level1.setGameData(data);  
+	    level1.start();         
+                            
 	}
 }

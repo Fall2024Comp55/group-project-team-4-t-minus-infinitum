@@ -49,8 +49,8 @@ public class TestingLevel3 extends GraphicsProgram implements ActionListener {
 	private GLabel retryLabel;
 	
 	private boolean levelEnded = false;
-	
 	private int waveNumber = 1;
+	private GameData gameData;
 
 	public void init() {
 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
@@ -97,7 +97,10 @@ public class TestingLevel3 extends GraphicsProgram implements ActionListener {
 		hideCursor();
 
 	}
-
+	
+	public void setGameData (GameData data) {
+		this.gameData = data;
+	}
 	public void userSpaceshipMovement(MouseEvent e) {
 		double mouseX = e.getX();
 		double mouseY = e.getY();
