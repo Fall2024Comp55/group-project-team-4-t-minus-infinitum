@@ -1,112 +1,213 @@
-import acm.program.*;
- import acm.graphics.*;
- import acm.util.*;
- import java.awt.*;
- import javax.swing.*;
- import java.util.ArrayList;
- import java.awt.event.*;
- import java.awt.image.BufferedImage;
- 
- public class TestingLevel2 extends GraphicsProgram implements ActionListener {
- 	private ArrayList<GOval> enemyBullets;
- 	private ArrayList<GOval> userBullets;
- 	private Timer movement;
- 	private RandomGenerator rgen;
- 
- 	public static final int PROGRAM_WIDTH = 900;
- 	public static final int PROGRAM_HEIGHT = 600;
- 	public static final int SIZE = 25;
- 	public static final int MS = 25;
- 	public static final int ENEMY_PROJ_SPEED = 7;
- 	public static final int ENEMY_PROJ_SIZE = 10;
- 	private final int USER_PROJ_SPEED = 7;
- 	private final int USER_PROJ_SIZE = 8;
- 	private static final int ENEMY_MOVE_SPEED = 9;
- 
- 	private int enemyShootCooldown = 50;
- 	private int enemyTicksSinceLastShot = 0;
- 
- 	private int mainShipShootCooldown = 13; // lower = faster shooting
- 	private int mainShipTicksSinceLastShot = 0;
- 
- 	private int elapsedTime = 0; // time in seconds
- 	private int score = 0;
- 	private GLabel timerLabel;
- 	private GLabel scoreLabel;
- 	private int msCounter = 0;
- 
- 	private GLabel bonusTimerLabel;
- 	private int bonusPoints = 0;
- 	private long bonusStartTime;
- 	private final int BONUS_TIME_LIMIT = 60; // seconds
- 
- 	private boolean mousePressed = false;
- 	private boolean gameOverFlag = false;
- 
- 	private ArrayList<GPolygon> enemyVisuals;
- 	private GPolygon visualMainShip;
- 	private GRect retryButton;
- 	private GLabel retryLabel;
- 	
- 	private boolean levelEnded = false;
- 
- 	private int waveNumber = 1;
- 	
- 	public void init() {
- 		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
- 		addMouseListeners();
- 		Toolkit toolkit = Toolkit.getDefaultToolkit();
- 		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
- 		Cursor blankCursor = toolkit.createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
- 		getGCanvas().setCursor(blankCursor);
- 	}
- 
- 	public void run() {
- 		rgen = RandomGenerator.getInstance();
- 		enemyBullets = new ArrayList<>();
- 		enemyVisuals = new ArrayList<>();
- 		userBullets = new ArrayList<>();
- 
- 		UserSpaceship mainship = new UserSpaceship(SpaceshipType.userSpaceship, 14, 12);
- 		visualMainShip = mainship.getVisualMainShip();
- 		add(visualMainShip);
- 
- 		
- 		spawnWave(1);
- 
- 		movement = new Timer(MS, this);
- 		movement.start();
- 
- 		// Added a timer
- 		timerLabel = new GLabel("Time: 0s", PROGRAM_WIDTH - 900, 20);
- 		timerLabel.setFont("SansSerif-bold-16");
- 		add(timerLabel);
- 
- 		// Added a timer tracking bonus points
- 		bonusStartTime = System.currentTimeMillis();
- 		bonusTimerLabel = new GLabel("Bonus Time: 30", 0, 60);
- 		bonusTimerLabel.setFont("SansSerif-bold-16");
- 		bonusTimerLabel.setColor(Color.BLACK);
- 		add(bonusTimerLabel);
- 
- 		// Added a point system
- 		scoreLabel = new GLabel("Score: 0", 810, 20);
- 		scoreLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
- 		scoreLabel.setColor(Color.BLACK);
- 		add(scoreLabel);
- 		hideCursor();
- 
- 	}
- 
- 	public void userSpaceshipMovement(MouseEvent e) {
- 		double mouseX = e.getX();
- 		double mouseY = e.getY();
- 		visualMainShip.setLocation(mouseX, mouseY);
- 	}
- 
- 	public void projectileCollisionDetection() {
- 		if (gameOverFlag) {
-	        return; // Don't process mouse events if the game is over
+import acm.graphics.*;
+import acm.program.GraphicsProgram;
+import acm.util.*;
+import java.awt.*;
+import javax.swing.*;
+import java.util.ArrayList;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+
+public class TestingLevel2 extends GraphicsProgram implements ActionListener {
+	private ArrayList<GOval> enemyBullets;
+	private ArrayList<GOval> userBullets;
+	private Timer movement;
+	private RandomGenerator rgen;
+
+	public static final int PROGRAM_WIDTH = 900;
+	public static final int PROGRAM_HEIGHT = 600;
+	public static final int SIZE = 25;
+	public static final int MS = 25;
+	public static final int ENEMY_PROJ_SPEED = 5 ;
+	public static final int ENEMY_PROJ_SIZE = 10;
+	private final int USER_PROJ_SPEED = 7;
+	private final int USER_PROJ_SIZE = 8;
+	private static final int ENEMY_MOVE_SPEED = 9;
+
+	private int enemyShootCooldown = 50;
+	private int enemyTicksSinceLastShot = 0;
+
+	private int mainShipShootCooldown = 13; // lower = faster shooting
+	private int mainShipTicksSinceLastShot = 0;
+
+	private int elapsedTime = 0; // time in seconds
+	private int score = 0;
+	private GLabel timerLabel;
+	private GLabel scoreLabel;
+	private int msCounter = 0;
+
+	private GLabel bonusTimerLabel;
+	private int bonusPoints = 0;
+	private long bonusStartTime;
+	private final int BONUS_TIME_LIMIT = 60; // seconds
+
+	private boolean mousePressed = false;
+	private boolean gameOverFlag = false;
+
+	private ArrayList<GPolygon> enemyVisuals;
+	private GPolygon visualMainShip;
+	private GRect retryButton;
+	private GLabel retryLabel;
+	
+	private int waveNumber = 1;
+	private boolean levelEnded = false;
+
+	public void init() {
+		setSize(PROGRAM_WIDTH, PROGRAM_HEIGHT);
+		addMouseListeners();
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		Cursor blankCursor = toolkit.createCustomCursor(cursorImg, new Point(0, 0), "blank cursor");
+		getGCanvas().setCursor(blankCursor);
+	}
+
+	public void run() {
+		rgen = RandomGenerator.getInstance();
+		enemyBullets = new ArrayList<>();
+		enemyVisuals = new ArrayList<>();
+		userBullets = new ArrayList<>();
+
+		UserSpaceship mainship = new UserSpaceship(SpaceshipType.userSpaceship, 14, 12);
+		visualMainShip = mainship.getVisualMainShip();
+		add(visualMainShip);
+
+		
+		spawnWave(1);
+
+		movement = new Timer(MS, this);
+		movement.start();
+
+		// Added a timer
+		timerLabel = new GLabel("Time: 0s", PROGRAM_WIDTH - 900, 20);
+		timerLabel.setFont("SansSerif-bold-16");
+		add(timerLabel);
+
+		// Added a timer tracking bonus points
+		bonusStartTime = System.currentTimeMillis();
+		bonusTimerLabel = new GLabel("Bonus Time: 30", 0, 60);
+		bonusTimerLabel.setFont("SansSerif-bold-16");
+		bonusTimerLabel.setColor(Color.BLACK);
+		add(bonusTimerLabel);
+
+		// Added a point system
+		scoreLabel = new GLabel("Score: 0", 810, 20);
+		scoreLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+		scoreLabel.setColor(Color.BLACK);
+		add(scoreLabel);
+		hideCursor();
+
+	}
+
+	public void userSpaceshipMovement(MouseEvent e) {
+		double mouseX = e.getX();
+		double mouseY = e.getY();
+		visualMainShip.setLocation(mouseX, mouseY);
+	}
+
+	public void projectileCollisionDetection() {
+		for (GOval bullet : enemyBullets) {
+			if (bullet.getBounds().intersects(visualMainShip.getBounds())) {
+				System.out.println("Collision Detected!");
+				enemyBullets.remove(bullet);
+				remove(bullet);
+				gameOver();
+				break;
+			}
+		}
+	}
+
+	public void enemyCollisionDetection() {
+		for (GPolygon enemyVisual : enemyVisuals) {
+			if (enemyVisual.getBounds().intersects(visualMainShip.getBounds())) {
+				System.out.println("Enemy Collision Detected!");
+				remove(enemyVisual);
+				enemyVisuals.remove(enemyVisual);
+				gameOver();
+				break;
+			}
+		}
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		userSpaceshipMovement(e);
+		projectileCollisionDetection();
+		enemyCollisionDetection();
+	}
+
+	private void shootFromEnemy(double x, double y) {
+		double enemyTipX = x;
+		double enemyTipY = y - SIZE / 2;
+
+		GOval bullet = new GOval(enemyTipX - ENEMY_PROJ_SIZE / 2, enemyTipY - ENEMY_PROJ_SIZE / 2, ENEMY_PROJ_SIZE,
+				ENEMY_PROJ_SIZE);
+		bullet.setFilled(true);
+		bullet.setColor(Color.RED);
+		add(bullet);
+		enemyBullets.add(bullet);
+	}
+
+	private void shootFromUser() {
+		double shipX = visualMainShip.getX() + SIZE / 2;
+		double shipY = visualMainShip.getY();
+
+		GOval bullet = new GOval(shipX - USER_PROJ_SIZE / 2, shipY - USER_PROJ_SIZE, USER_PROJ_SIZE, USER_PROJ_SIZE);
+		bullet.setFilled(true);
+		bullet.setColor(Color.GREEN);
+		add(bullet);
+		userBullets.add(bullet);
+	}
+
+	private void moveAllEnemyBullets() {
+		ArrayList<GOval> bulletsToRemove = new ArrayList<>();
+
+		for (GOval bullet : enemyBullets) {
+			bullet.move(0, ENEMY_PROJ_SPEED);
+			if (bullet.getY() > PROGRAM_HEIGHT) {
+				bulletsToRemove.add(bullet);
+			}
+		}
+
+		for (GOval bullet : bulletsToRemove) {
+			remove(bullet);
+			enemyBullets.remove(bullet);
+		}
+	}
+	
+	private void spawnWave(int wave) {
+	    enemyVisuals.clear();
+
+	    if (wave == 1) {
+	        Enemyship1[] wave1Enemies = {
+	            new Enemyship1(SpaceshipType.eType1, 5, 7),
+	            new Enemyship1(SpaceshipType.eType1, 5, 11),
+	            new Enemyship1(SpaceshipType.eType1, 5, 15),
+	            new Enemyship1(SpaceshipType.eType1, 1, 5),
+	            new Enemyship1(SpaceshipType.eType1, 1, 9),
+	            new Enemyship1(SpaceshipType.eType1, 1, 13),
+	            new Enemyship1(SpaceshipType.eType1, 1, 17)
+	        };
+
+	        for (Enemyship1 enemy : wave1Enemies) {
+	            GPolygon enemyVisual = enemy.getVisual();
+	            enemyVisuals.add(enemyVisual);
+	            add(enemyVisual);
+	        }
+	    } else if (wave == 2) {
+	        Enemyship2[] wave2Enemies = {
+	            new Enemyship2(SpaceshipType.eType2, 4, 6),
+	            new Enemyship2(SpaceshipType.eType2, 4, 9),
+	            new Enemyship2(SpaceshipType.eType2, 4, 12),
+	            new Enemyship2(SpaceshipType.eType2, 4, 15),
+	            new Enemyship2(SpaceshipType.eType2, 1, 7),
+	            new Enemyship2(SpaceshipType.eType2, 1, 10),
+	            new Enemyship2(SpaceshipType.eType2, 1, 13)
+	        };
+
+	        for (Enemyship2 enemy : wave2Enemies) {
+	            GPolygon enemyVisual = enemy.getVisual();
+	            enemyVisuals.add(enemyVisual);
+	            add(enemyVisual);
+	        }
 	    }
  		for (GOval bullet : enemyBullets) {
  			if (bullet.getBounds().intersects(visualMainShip.getBounds())) {
@@ -118,18 +219,7 @@ import acm.program.*;
  			}
  		}
  	}
- 
- 	public void enemyCollisionDetection() {
- 		for (GPolygon enemyVisual : enemyVisuals) {
- 			if (enemyVisual.getBounds().intersects(visualMainShip.getBounds())) {
- 				System.out.println("Enemy Collision Detected!");
- 				remove(enemyVisual);
- 				enemyVisuals.remove(enemyVisual);
- 				gameOver();
- 				break;
- 			}
- 		}
- 	}
+
  
  	// Firing from main ship using left mouse button
  	@Override
@@ -159,13 +249,6 @@ import acm.program.*;
  		projectileCollisionDetection();
  		enemyCollisionDetection();
  		if (levelEnded) return; // Stop the ship from moving
- 	}
- 
- 	@Override
- 	public void mouseDragged(MouseEvent e) {
- 		userSpaceshipMovement(e);
- 		projectileCollisionDetection();
- 		enemyCollisionDetection();
  	}
  
  	public void actionPerformed(ActionEvent e) {
@@ -258,45 +341,6 @@ import acm.program.*;
  		enemyCollisionDetection();
  	}
  
- 	private void shootFromEnemy(double x, double y) {
- 		double enemyTipX = x;
- 		double enemyTipY = y - SIZE / 2;
- 
- 		GOval bullet = new GOval(enemyTipX - ENEMY_PROJ_SIZE / 2, enemyTipY - ENEMY_PROJ_SIZE / 2, ENEMY_PROJ_SIZE,
- 				ENEMY_PROJ_SIZE);
- 		bullet.setFilled(true);
- 		bullet.setColor(Color.RED);
- 		add(bullet);
- 		enemyBullets.add(bullet);
- 	}
- 
- 	private void shootFromUser() {
- 		double shipX = visualMainShip.getX() + SIZE / 2;
- 		double shipY = visualMainShip.getY();
- 
- 		GOval bullet = new GOval(shipX - USER_PROJ_SIZE / 2, shipY - USER_PROJ_SIZE, USER_PROJ_SIZE, USER_PROJ_SIZE);
- 		bullet.setFilled(true);
- 		bullet.setColor(Color.GREEN);
- 		add(bullet);
- 		userBullets.add(bullet);
- 	}
- 
- 	private void moveAllEnemyBullets() {
- 		ArrayList<GOval> bulletsToRemove = new ArrayList<>();
- 
- 		for (GOval bullet : enemyBullets) {
- 			bullet.move(0, ENEMY_PROJ_SPEED);
- 			if (bullet.getY() > PROGRAM_HEIGHT) {
- 				bulletsToRemove.add(bullet);
- 			}
- 		}
- 
- 		for (GOval bullet : bulletsToRemove) {
- 			remove(bullet);
- 			enemyBullets.remove(bullet);
- 		}
- 	}
- 
  	private void moveUserBullets() {
  		ArrayList<GOval> bulletsToRemove = new ArrayList<>();
  		ArrayList<GPolygon> enemiesToRemove = new ArrayList<>();
@@ -365,45 +409,6 @@ import acm.program.*;
 	    TestingLevel3 next = new TestingLevel3();
 	    next.start(); // or next.startApplication() if needed
 	}
- 	
- 	private void spawnWave(int wave) {
- 	    enemyVisuals.clear();
- 
- 	    if (wave == 1) {
- 	        Enemyship1[] wave1Enemies = {
- 	            new Enemyship1(SpaceshipType.eType1, 5, 7),
- 	            new Enemyship1(SpaceshipType.eType1, 5, 11),
- 	            new Enemyship1(SpaceshipType.eType1, 5, 15),
- 	            new Enemyship1(SpaceshipType.eType1, 1, 5),
- 	            new Enemyship1(SpaceshipType.eType1, 1, 9),
- 	            new Enemyship1(SpaceshipType.eType1, 1, 13),
- 	            new Enemyship1(SpaceshipType.eType1, 1, 17)
- 	        };
- 
- 	        for (Enemyship1 enemy : wave1Enemies) {
- 	            GPolygon enemyVisual = enemy.getVisual();
- 	            enemyVisuals.add(enemyVisual);
- 	            add(enemyVisual);
- 	        }
- 	    } else if (wave == 2) {
- 	        Enemyship2[] wave2Enemies = {
- 	            new Enemyship2(SpaceshipType.eType2, 5, 7),
- 	            new Enemyship2(SpaceshipType.eType2, 5, 11),
- 	            new Enemyship2(SpaceshipType.eType2, 5, 15),
- 	            new Enemyship2(SpaceshipType.eType2, 1, 5),
- 	            new Enemyship2(SpaceshipType.eType2, 1, 9),
- 	            new Enemyship2(SpaceshipType.eType2, 1, 13),
- 	            new Enemyship2(SpaceshipType.eType2, 1, 17)
- 	        };
- 
- 	        for (Enemyship2 enemy : wave2Enemies) {
- 	            GPolygon enemyVisual = enemy.getVisual();
- 	            enemyVisuals.add(enemyVisual);
- 	            add(enemyVisual);
- 	        }
- 	    }
- 	}
- 	
  	
  	private void gameOver() {
  		gameOverFlag = true;
