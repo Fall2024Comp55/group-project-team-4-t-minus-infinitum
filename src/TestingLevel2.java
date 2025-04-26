@@ -392,10 +392,11 @@ public class TestingLevel2 extends GraphicsProgram implements ActionListener {
  				}
  				movement.stop();
  				showEndLevelSummary();// Show the end level summary
- 			}
+ 			}}
  		}
  
- 	}
+ 
+		
  	
  	private void showEndLevelSummary() {
 		levelEnded = true;
