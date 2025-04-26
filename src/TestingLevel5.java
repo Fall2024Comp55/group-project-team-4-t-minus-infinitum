@@ -133,7 +133,7 @@ public class TestingLevel5 extends GraphicsProgram implements ActionListener {
 		if (SwingUtilities.isLeftMouseButton(e)) {
 			mousePressed = true;
 		}
-		// Retry button clicked
+		// Retry button click
 		if (gameOverFlag && retryButton != null && retryButton.contains(e.getX(), e.getY())) {
 			restartGame();
 		}
